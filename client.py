@@ -14,7 +14,7 @@ try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((hostnameOrIp, port))
 except socket.error as e:
-    print('Connection failed: {}'.format(e))
+    print('ERROR: Connection failed: {404}'.format(e))
     sys.exit()
 
 data = ""
@@ -39,10 +39,10 @@ s.settimeout(10)
 try:
     s.recv(1024)
 except socket.timeout:
-    print('Connection timed out')
+    print('ERROR: Connection timed out')
     s.close()
 except socket.error as e:
-    print('Connection failed: {}'.format(e))
+    print('ERROR: Connection failed: {303}'.format(e))
     s.close()
 else:
     print('Connection established')
