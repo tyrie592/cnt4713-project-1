@@ -10,66 +10,47 @@ hostnameOrIp = sys.argv[1]
 port = int(sys.argv[2])
 if port < 0 or port > 70000:
     sys.stderr.write("ERROR: port myst be between 0 and 70000\n")
-    sys.exit(1)
 
 binFilename = sys.argv[3]
 
-# I give up I'm taking a different approach
-#biiiiig while loop
+# socket stuff and connect
+try:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((hostnameOrIp, port))
+except socket.error as e:
+    sys.stderr.write('ERROR: Connection failed: {404}\n'.format(e))
+    sys.exit(1)
 
-#make socket
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-    sock.settimeout(10)
-    try:
-        #socket connect
-        sock.connect((hostnameOrIp, port))
-        print("connection successful\n")
-        msg = b""
+# data handling
+data = ""
+while "\r\n" not in data:
+    data += s.recv(1).decode("utf-8")
 
-        #check for correct message
-        while b'\r\n' not in msg
-            info = sock.recv(1)
-            msg += info
-        print("data recieved\n")
-        
-        #make sure is correct
-        if msg == b'accio\r\n':
-            sock.send(b'confirm-accio\r\n')
-            print("sent\n")
-            msg =b''
-            while b'\r\n' not in msg:
-                info = sock.recv(1)
-                msg += info
-            print("recived\n")
-            if msg == b'accio\r\n':
-                sock.send(b'confirm-accio-again\r\n\r\n')
-                print("sent\n")
+if data == "accio\r\n":
+    s.send("confirm-accio\r\n".encode())
+    data = ""
+    while "\r\n" not in data:
+        data += s.recv(1).decode("utf-8")
+    if data == "accio\r\n":
+        s.send("confirm-accio-again\r\n".encode())
 
-                #open file and send back to server
-                with open(binFilename, 'rb') as file:
-                    content = file.read()
-                    print("file read\n")
-                    while content:
-                            bytes = sock.send(content)
-                            print("file sent\n")
-                            content = file.read()
-                file.close()
-            #error handling(hopefully right)
-            else:
-                sys.stderr.write("ERROR: Incorrect server data\n")
-                sys.exit(1)
-        else:
-            print("Incorrect server data\n")
-            sys.exit(1)
-    #more error handling
-    except socket.timeout as e:
-        sys.stderr.write("ERROR: Connection Timeout\n")
-        sys.exit(1)
-    except sock.error as e:
-        sys.stderr.write("ERROR: %s\n" % str(e))
-        sys.exit(1)
-    pass
-pass
+# file stuff
+with open(binFilename, 'rb') as file:
+    chunk = file.read(10000)
+    while chunk:
+        s.send(chunk)
+        chunk = file.read(10000)
 
-#socket closed
-sys.exit(0)
+# error handling
+s.settimeout(10)
+try:
+    s.recv(1024)
+except socket.timeout:
+    sys.stderr.write('ERROR: Connection timed out\n')
+    sys.exit(1)
+except socket.error as e:
+    sys.stderr.write('ERROR: Connection failed: {303}\n'.format(e))
+    sys.exit(1)
+else:
+    sys.stderr.write('Connection established\n')
+    sys.exit(0)
