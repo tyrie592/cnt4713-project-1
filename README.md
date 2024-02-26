@@ -1,9 +1,12 @@
 I ran into a lot of issues, especially with the first client file.
 To be honest, I just learned python and somehow did everything wrong
+I also did this last minute and it was a mistake
 
 code references I used:
 https://docs.python.org/3/library/socket.html#socket.socket.listen
-class stuff
+class tutorials I sorta listened to
+https://www.datacamp.com/tutorial/a-complete-guide-to-socket-programming-in-python (didn't listen very well)
+https://realpython.com/python-sockets/
 
 
 client.py issues:
@@ -13,7 +16,9 @@ code can't send file correctly, keeps adding something at the front????
 tried to rewrite code, made it worse actually
 
 server.py issues
-nothing works good lord
+literally nothing works good lord
+got error hadling kinda working and now it can take a collection
+most issues seems to be the terrible no good client that I'm still struggling to fix
 
 
 
