@@ -70,7 +70,3 @@ def main():
         # make thread for all good connection
         client_thread = threading.Thread(target=handle_client, args=(client_socket, connection_id, save_dir))
         client_thread.start()
-
-# covering my bases
-if _name_ == "_main_":
-    main()
