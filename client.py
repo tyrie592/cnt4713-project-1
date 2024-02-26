@@ -2,12 +2,15 @@ import sys
 import socket
 # start text stuff
 if len(sys.argv) != 4:
-    print('Usage: python3 client.py <HOSTNAME-OR-IP> <PORT> <FILENAME>')
+    print('ERROR: command needs python3 client.py <HOSTNAME-OR-IP> <PORT> <FILENAME>')
     sys.exit()
 
 # port and hostname define
 hostnameOrIp = sys.argv[1]
 port = int(sys.argv[2])
+if port < 0 or port > 70000:
+    print("ERROR: port myst be between 0 and 70000")
+    
 binFilename = sys.argv[3]
 
 # socket stuff and connect
