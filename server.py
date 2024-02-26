@@ -42,8 +42,8 @@ def main():
     # Bind socket
     try:
         server_socket.bind(("0.0.0.0", port))
-    except:
-        sys.stderr.write("ERROR: Unable to bind to port\n")
+    except Exception as e:
+        sys.stderr.write(f"ERROR: Unable to bind to port: {e}\n")
         sys.exit(1)
 
     # socket wait for client
@@ -51,17 +51,18 @@ def main():
 
     # Graceful and elegant exit
     def exit_explode_violently(signum, frame):
+        server_socket.close()
         sys.exit(0)
+
     signal.signal(signal.SIGQUIT, exit_explode_violently)
     signal.signal(signal.SIGTERM, exit_explode_violently)
     signal.signal(signal.SIGINT, exit_explode_violently)
-    # I'm so funny I know
 
     global connection_counter
 
     while True:
         (client_socket, address) = server_socket.accept()
-        client_socket.settimeout(10)  # timeout after 10 segundo
+        client_socket.settimeout(10)  # timeout after 10 seconds
 
         with lock:
             connection_counter += 1
@@ -70,3 +71,6 @@ def main():
         # make thread for all good connection
         client_thread = threading.Thread(target=handle_client, args=(client_socket, connection_id, save_dir))
         client_thread.start()
+
+if __name__ == "__main__":
+    main()
