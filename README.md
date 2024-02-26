@@ -10,8 +10,10 @@ client.py issues:
 bad command line argument handling - have no idea
 literally all my error handling was wrong (issues 2, 3, 5, 6) - fixed by adding proper error titling and using sys.stderr isntead of print - somehow still doesn't work
 code can't send file correctly, keeps adding something at the front????
+tried to rewrite code, made it worse actually
 
 server.py issues
+nothing works good lord
 
 
 
