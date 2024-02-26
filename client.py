@@ -2,14 +2,14 @@ import sys
 import socket
 # start text stuff
 if len(sys.argv) != 4:
-    print('ERROR: command needs python3 client.py <HOSTNAME-OR-IP> <PORT> <FILENAME>')
+    sys.stderr.write('ERROR: command needs python3 client.py <HOSTNAME-OR-IP> <PORT> <FILENAME>\n')
     sys.exit(1)
 
 # port and hostname define
 hostnameOrIp = sys.argv[1]
 port = int(sys.argv[2])
 if port < 0 or port > 70000:
-    print("ERROR: port myst be between 0 and 70000")
+    sys.stderr.write("ERROR: port myst be between 0 and 70000\n")
 
 binFilename = sys.argv[3]
 
@@ -18,7 +18,7 @@ try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((hostnameOrIp, port))
 except socket.error as e:
-    print('ERROR: Connection failed: {404}'.format(e))
+    sys.stderr.write('ERROR: Connection failed: {404}\n'.format(e))
     sys.exit(1)
 
 # data handling
@@ -46,11 +46,11 @@ s.settimeout(10)
 try:
     s.recv(1024)
 except socket.timeout:
-    print('ERROR: Connection timed out')
+    sys.stderr.write('ERROR: Connection timed out\n')
     sys.exit(1)
 except socket.error as e:
-    print('ERROR: Connection failed: {303}'.format(e))
+    sys.stderr.write('ERROR: Connection failed: {303}\n'.format(e))
     sys.exit(1)
 else:
-    print('Connection established')
+    sys.stderr.write('Connection established\n')
     sys.exit(0)
